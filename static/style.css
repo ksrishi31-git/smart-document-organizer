@@ -1,62 +1,49 @@
 body {
-    font-family: Arial;
-    background: linear-gradient(120deg, #89f7fe, #66a6ff);
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #74ebd5, #ACB6E5);
     margin: 0;
-    padding: 20px;
+    padding: 0;
 }
-
-.center {
-    text-align: center;
-    margin-top: 100px;
-}
-
-input, button {
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-    border: none;
-}
-
-button {
-    background: #2b59ff;
-    color: white;
-    cursor: pointer;
-}
-
 .container {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+    width: 400px;
+    margin: 80px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    text-align: center;
 }
-
-.card {
-    background: white;
-    padding: 20px;
-    width: 250px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+input[type=email], input[type=password], input[type=file] {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
 }
-
-.folder {
-    background: #fdf6e3;
-}
-
-.toggle-btn {
-    padding: 8px 15px;
-    border-radius: 20px;
-    background: black;
+button {
+    padding: 10px 20px;
+    background: #6C63FF;
     color: white;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
-    margin-bottom: 20px;
+    margin-top: 10px;
 }
-
-/* DARK MODE */
-.dark-mode {
-    background: #121212;
-    color: white;
+button:hover {
+    background: #5548C8;
 }
-
-.dark-mode .card {
-    background: #1e1e1e;
+.error {
+    color: red;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+th {
+    background: #6C63FF;
     color: white;
 }

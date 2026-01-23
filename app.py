@@ -1,28 +1,28 @@
-from flask import Flask, render_template, request, redirect, session, send_file
-import os, sqlite3, zipfile
+from flask import Flask, render_template, request, redirect, url_for, send_file, session
+from flask_cors import CORS
+import os
+from werkzeug.utils import secure_filename
+from zipfile import ZipFile
 from PIL import Image
 import pytesseract
 
 app = Flask(__name__)
-app.secret_key = "secret123"
+CORS(app)
+app.secret_key = "supersecretkey"  # for session
 
+# Folder to store uploads
 UPLOAD_FOLDER = "uploads"
-CATEGORIES = ["Certificate", "Academic", "Financial", "Personal"]
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
-# ---------- DATABASE ----------
-def get_db():
-    return sqlite3.connect("database.db")
+# Dummy users (email:password) for simplicity
+USERS = {
+    "rishi@gmail.com": "1234",
+    "student@gmail.com": "pass"
+}
 
-with get_db() as db:
-    db.execute("""
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT UNIQUE,
-        password TEXT
-    )
-    """)
+# ---------------- Helper Functions ----------------
 
-# ---------- CATEGORY LOGIC ----------
 def categorize(text):
     text = text.lower()
     if "certificate" in text:
@@ -34,99 +34,78 @@ def categorize(text):
     else:
         return "Personal"
 
-# ---------- ROUTES ----------
+def create_user_folders(email):
+    user_path = os.path.join(UPLOAD_FOLDER, email.replace("@","_"))
+    categories = ["Certificate", "Academic", "Financial", "Personal"]
+    for cat in categories:
+        cat_path = os.path.join(user_path, cat)
+        if not os.path.exists(cat_path):
+            os.makedirs(cat_path)
+    return user_path
+
+# ---------------- Routes ----------------
+
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-
-        db = get_db()
-        user = db.execute(
-            "SELECT * FROM users WHERE email=? AND password=?",
-            (email, password)
-        ).fetchone()
-
-        if user:
+        if email in USERS and USERS[email] == password:
             session["email"] = email
-            return redirect("/upload")
-
+            return redirect(url_for("upload"))
+        else:
+            return render_template("login.html", error="Invalid credentials")
     return render_template("login.html")
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
-
-        try:
-            db = get_db()
-            db.execute("INSERT INTO users (email,password) VALUES (?,?)",
-                       (email, password))
-            db.commit()
-            return redirect("/")
-        except:
-            pass
-
-    return render_template("register.html")
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
     if "email" not in session:
-        return redirect("/")
-
-    user = session["email"]
-    user_path = os.path.join(UPLOAD_FOLDER, user)
-
-    for cat in CATEGORIES:
-        os.makedirs(os.path.join(user_path, cat), exist_ok=True)
+        return redirect(url_for("login"))
 
     if request.method == "POST":
         files = request.files.getlist("files")
+        user_folder = create_user_folders(session["email"])
+        uploaded_info = []
 
-        for file in files:
-            image = Image.open(file)
-            text = pytesseract.image_to_string(image)
+        for f in files:
+            filename = secure_filename(f.filename)
+            img = Image.open(f)
+            text = pytesseract.image_to_string(img)
             category = categorize(text)
 
-            save_path = os.path.join(user_path, category, file.filename)
-            file.seek(0)
-            file.save(save_path)
+            save_path = os.path.join(user_folder, category, filename)
+            img.save(save_path)
 
-        return redirect("/dashboard")
+            uploaded_info.append({"name": filename, "category": category})
+
+        return render_template("dashboard.html", files=uploaded_info)
 
     return render_template("upload.html")
 
-@app.route("/dashboard")
-def dashboard():
+@app.route("/download")
+def download():
     if "email" not in session:
-        return redirect("/")
+        return redirect(url_for("login"))
 
-    user = session["email"]
-    data = {}
+    user_folder = os.path.join(UPLOAD_FOLDER, session["email"].replace("@","_"))
+    zip_path = f"{user_folder}.zip"
 
-    for cat in CATEGORIES:
-        folder = os.path.join(UPLOAD_FOLDER, user, cat)
-        data[cat] = os.listdir(folder)
+    # Create ZIP
+    with ZipFile(zip_path, "w") as zipf:
+        for root, dirs, files in os.walk(user_folder):
+            for file in files:
+                zipf.write(os.path.join(root, file),
+                           os.path.relpath(os.path.join(root, file), user_folder))
 
-    return render_template("dashboard.html", data=data)
-
-@app.route("/download/<category>")
-def download(category):
-    user = session["email"]
-    folder_path = os.path.join(UPLOAD_FOLDER, user, category)
-    zip_name = f"{category}.zip"
-
-    with zipfile.ZipFile(zip_name, "w") as zipf:
-        for file in os.listdir(folder_path):
-            zipf.write(os.path.join(folder_path, file), file)
-
-    return send_file(zip_name, as_attachment=True)
+    return send_file(zip_path, as_attachment=True)
 
 @app.route("/logout")
 def logout():
-    session.clear()
-    return redirect("/")
+    session.pop("email", None)
+    return redirect(url_for("login"))
+
+# ---------------- Run App ----------------
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host="0.0.0.0", port=port)
