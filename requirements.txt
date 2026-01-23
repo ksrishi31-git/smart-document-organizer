@@ -1,5 +1,4 @@
 flask
 flask-cors
-pytesseract
-pillow
+requests
 gunicorn

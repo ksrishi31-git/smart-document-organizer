@@ -8,6 +8,20 @@
 <body>
 <div class="container">
     <h1>Uploaded Files</h1>
+
+    <!-- Dashboard cards showing category counts -->
+    <div class="card-container">
+        {% set categories = ['Certificate', 'Academic', 'Financial', 'Personal'] %}
+        {% for cat in categories %}
+            {% set count = files|selectattr('category','equalto',cat)|list|length %}
+            <div class="card">
+                <h3>{{ cat }}</h3>
+                <p>{{ count }} files</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Table showing uploaded files -->
     <table>
         <tr>
             <th>File Name</th>
@@ -20,10 +34,12 @@
         </tr>
         {% endfor %}
     </table>
-    <br>
-    <a href="{{ url_for('upload') }}">Upload More</a> |
-    <a href="{{ url_for('download') }}">Download All Folders as ZIP</a> |
-    <a href="{{ url_for('logout') }}">Logout</a>
+
+    <div style="margin-top:15px;">
+        <a href="{{ url_for('upload') }}">Upload More</a> |
+        <a href="{{ url_for('download') }}">Download All Folders as ZIP</a> |
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
 </div>
 </body>
 </html>

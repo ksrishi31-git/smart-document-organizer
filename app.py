@@ -1,28 +1,25 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file, session
+from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from flask_cors import CORS
 import os
+import requests
 from werkzeug.utils import secure_filename
 from zipfile import ZipFile
-from PIL import Image
-import pytesseract
 
 app = Flask(__name__)
 CORS(app)
-app.secret_key = "supersecretkey"  # for session
+app.secret_key = "supersecretkey"
 
-# Folder to store uploads
 UPLOAD_FOLDER = "uploads"
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# Dummy users (email:password) for simplicity
+# Dummy users (email:password)
 USERS = {
     "rishi@gmail.com": "1234",
     "student@gmail.com": "pass"
 }
 
 # ---------------- Helper Functions ----------------
-
 def categorize(text):
     text = text.lower()
     if "certificate" in text:
@@ -44,17 +41,15 @@ def create_user_folders(email):
     return user_path
 
 # ---------------- Routes ----------------
-
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form["email"]
+        email = request.form["email"].lower()
         password = request.form["password"]
         if email in USERS and USERS[email] == password:
             session["email"] = email
             return redirect(url_for("upload"))
-        else:
-            return render_template("login.html", error="Invalid credentials")
+        return render_template("login.html", error="Invalid credentials")
     return render_template("login.html")
 
 @app.route("/upload", methods=["GET", "POST"])
@@ -69,12 +64,30 @@ def upload():
 
         for f in files:
             filename = secure_filename(f.filename)
-            img = Image.open(f)
-            text = pytesseract.image_to_string(img)
+            file_path = os.path.join(user_folder, filename)
+            f.save(file_path)
+
+            # Use free OCR API for text extraction
+            try:
+                with open(file_path, "rb") as image_file:
+                    response = requests.post(
+                        "https://api.ocr.space/parse/image",
+                        files={"filename": image_file},
+                        data={"apikey": "helloworld"}  # free key
+                    )
+                    result = response.json()
+                    text = result.get("ParsedResults")[0].get("ParsedText", "")
+            except:
+                text = ""
+
             category = categorize(text)
 
-            save_path = os.path.join(user_folder, category, filename)
-            img.save(save_path)
+            # Move file to category folder
+            cat_path = os.path.join(user_folder, category)
+            if not os.path.exists(cat_path):
+                os.makedirs(cat_path)
+            final_path = os.path.join(cat_path, filename)
+            os.rename(file_path, final_path)
 
             uploaded_info.append({"name": filename, "category": category})
 
@@ -90,13 +103,11 @@ def download():
     user_folder = os.path.join(UPLOAD_FOLDER, session["email"].replace("@","_"))
     zip_path = f"{user_folder}.zip"
 
-    # Create ZIP
     with ZipFile(zip_path, "w") as zipf:
         for root, dirs, files in os.walk(user_folder):
             for file in files:
                 zipf.write(os.path.join(root, file),
                            os.path.relpath(os.path.join(root, file), user_folder))
-
     return send_file(zip_path, as_attachment=True)
 
 @app.route("/logout")
@@ -105,7 +116,6 @@ def logout():
     return redirect(url_for("login"))
 
 # ---------------- Run App ----------------
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, host="0.0.0.0", port=port)
