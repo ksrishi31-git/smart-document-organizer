@@ -1,0 +1,13 @@
+<h2>Dashboard</h2>
+
+{% for category, files in data.items() %}
+<h3>{{ category }} ({{ files|length }})</h3>
+<a href="/download/{{ category }}">⬇ Download Folder</a>
+<ul>
+  {% for f in files %}
+  <li>{{ f }}</li>
+  {% endfor %}
+</ul>
+{% endfor %}
+
+<a href="/logout">Logout</a>

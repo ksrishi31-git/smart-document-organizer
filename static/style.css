@@ -1,0 +1,62 @@
+body {
+    font-family: Arial;
+    background: linear-gradient(120deg, #89f7fe, #66a6ff);
+    margin: 0;
+    padding: 20px;
+}
+
+.center {
+    text-align: center;
+    margin-top: 100px;
+}
+
+input, button {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    background: #2b59ff;
+    color: white;
+    cursor: pointer;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    width: 250px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.folder {
+    background: #fdf6e3;
+}
+
+.toggle-btn {
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: black;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+/* DARK MODE */
+.dark-mode {
+    background: #121212;
+    color: white;
+}
+
+.dark-mode .card {
+    background: #1e1e1e;
+    color: white;
+}
