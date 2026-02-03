@@ -1,21 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Upload Documents - Smart Document Organizer</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <div class="container">
-    <h1>Upload Documents</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="files" multiple required>
-        <button type="submit">Upload</button>
-    </form>
-    <div style="margin-top:15px;">
-        <a href="{{ url_for('download') }}">Download All Folders as ZIP</a> |
-        <a href="{{ url_for('logout') }}">Logout</a>
-    </div>
+<h2>Upload Files</h2>
+<form method="post" enctype="multipart/form-data">
+<input type="file" name="files" multiple required>
+<button>Upload</button>
+</form>
 </div>
 </body>
 </html>

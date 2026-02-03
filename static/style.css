@@ -1,113 +1,241 @@
-/* Global Styles */
+/* ==============================
+   GLOBAL RESET & THEME
+============================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(to right, #74ebd5, #ACB6E5);
+  background: radial-gradient(circle at top left, #1e1f3c, #0f1021);
+  color: #eaeaff;
+  min-height: 100vh;
 }
 
-/* Container */
+/* Smooth animations */
+a, button, .folder, .card {
+  transition: all 0.35s ease;
+}
+
+/* ==============================
+   SIDEBAR (3D GLASS)
+============================== */
+.sidebar {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  width: 230px;
+  height: calc(100vh - 40px);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  border-radius: 22px;
+  padding: 30px 15px;
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.6),
+    inset 0 0 1px rgba(255,255,255,0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar a {
+  color: #fff;
+  padding: 14px 20px;
+  margin: 6px 0;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+}
+
+.sidebar a:hover {
+  transform: translateX(8px) scale(1.05);
+  background: linear-gradient(135deg, #7f7cff, #a18dff);
+  box-shadow: 0 12px 30px rgba(127,124,255,0.6);
+}
+
+/* ==============================
+   MAIN CONTAINER
+============================== */
 .container {
-    width: 400px;
-    margin: 80px auto;
-    padding: 30px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-    text-align: center;
+  margin-left: 290px;
+  padding: 40px;
 }
 
-/* Headings */
-h1 {
-    color: #333;
+/* ==============================
+   CARDS & FOLDERS (3D)
+============================== */
+.folder, .card {
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,0.15),
+    rgba(255,255,255,0.05)
+  );
+  backdrop-filter: blur(16px);
+  border-radius: 22px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow:
+    0 20px 45px rgba(0,0,0,0.6),
+    inset 0 0 1px rgba(255,255,255,0.3);
 }
 
-/* Inputs */
-input[type=email], input[type=password], input[type=file] {
-    width: 90%;
-    padding: 12px;
-    margin: 12px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
+.folder:hover, .card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.8);
 }
 
-/* Buttons */
+/* ==============================
+   HEADINGS
+============================== */
+h2 {
+  font-size: 30px;
+  margin-bottom: 25px;
+  background: linear-gradient(90deg, #7f7cff, #c6b7ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #dcdcff;
+}
+
+/* ==============================
+   FILE LISTS
+============================== */
+.folder ul {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.folder ul li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  font-size: 15px;
+}
+
+.folder ul li:last-child {
+  border-bottom: none;
+}
+
+.folder ul li a {
+  margin-left: 8px;
+  color: #9aa0ff;
+  font-weight: 500;
+}
+
+.folder ul li a:hover {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(160,155,255,0.9);
+}
+
+/* ==============================
+   BUTTONS (NEON 3D)
+============================== */
 button {
-    padding: 12px 25px;
-    background: #6C63FF;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
-    transition: 0.3s;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #7f7cff, #a18dff);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(127,124,255,0.6);
 }
+
 button:hover {
-    background: #5548C8;
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 20px 50px rgba(127,124,255,0.9);
 }
 
-/* Error Messages */
-.error {
-    color: red;
-    margin-top: 10px;
+/* ==============================
+   FORMS
+============================== */
+input[type="file"],
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  border: none;
+  margin: 10px 0;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
 }
 
-/* Links */
+input::placeholder {
+  color: #ccc;
+}
+
+input:focus {
+  outline: none;
+  background: rgba(255,255,255,0.18);
+  box-shadow: 0 0 12px rgba(127,124,255,0.8);
+}
+
+/* ==============================
+   LINKS
+============================== */
 a {
-    text-decoration: none;
-    color: #6C63FF;
-    font-weight: bold;
+  color: #9aa0ff;
+  text-decoration: none;
 }
+
 a:hover {
-    color: #5548C8;
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(160,155,255,0.9);
 }
 
-/* Table Styles */
+/* ==============================
+   TABLE (ADMIN PANEL)
+============================== */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-th {
-    background-color: #6C63FF;
-    color: white;
-}
-tr:hover {
-    background-color: #f1f1f1;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
 }
 
-/* Cards for categories */
-.card-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-top: 20px;
+th {
+  color: #cfcfff;
+  font-weight: 600;
 }
+
+td {
+  background: rgba(255,255,255,0.08);
+  padding: 15px;
+  border-radius: 14px;
+}
+
+/* ==============================
+   LOGIN / REGISTER CARD
+============================== */
 .card {
-    width: 48%;
-    background: #6C63FF;
-    color: white;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    transition: 0.3s;
+  max-width: 420px;
+  margin: 120px auto;
+  text-align: center;
 }
-.card:hover {
-    background: #5548C8;
+
+.card h2 {
+  margin-bottom: 20px;
 }
-.card h3 {
-    margin: 0;
-    font-size: 18px;
-}
-.card p {
-    margin-top: 8px;
-    font-size: 16px;
+
+/* ==============================
+   MOBILE FRIENDLY
+============================== */
+@media (max-width: 900px) {
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  .container {
+    margin-left: 0;
+  }
 }

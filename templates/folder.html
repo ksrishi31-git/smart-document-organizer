@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+<h2>📁 {{ category }}</h2>
+
+<a href="/dashboard">⬅ Back</a>
+
+{% for f in files %}
+<div class="file">
+  {{ f.filename }} ({{ f.date }})
+  <a class="del-btn" href="/delete-file/{{ f.id }}">🗑 Delete</a>
+</div>
+{% endfor %}
+
+</div>
+
+</body>
+</html>

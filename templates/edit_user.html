@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit User</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #1a73e8;
+        }
+
+        /* Stats cards */
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0 30px 0;
+        }
+        .stat-card {
+            flex: 1;
+            background: #d0e1ff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            position: relative;
+        }
+        .stat-card i {
+            font-size: 28px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: rgba(0,0,0,0.15);
+        }
+        .stat-card h3 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #1a73e8;
+        }
+        .stat-card p {
+            font-size: 14px;
+            color: #555;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        /* Uploaded files */
+        .folder {
+            padding:15px 15px 10px 15px;
+            margin:10px 0;
+            border-radius:12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            color: #fff;
+            position: relative;
+        }
+        .folder h4 {
+            margin-bottom: 8px;
+        }
+        .folder h4 i {
+            margin-right: 8px;
+        }
+        .folder ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .folder ul li {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .folder ul li a {
+            margin-left: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+        .folder ul li a:hover {
+            text-decoration: underline;
+        }
+        .folder a.download-zip {
+            display: inline-block;
+            margin-top: 10px;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+        .folder a.download-zip:hover {
+            opacity: 0.9;
+        }
+
+        /* Category colors */
+        .Certificate { background: #f06292; }
+        .Academic { background: #42a5f5; }
+        .Work { background: #66bb6a; }
+        .Business { background: #ffa726; }
+        .Personal { background: #ab47bc; }
+        .Images { background: #29b6f6; }
+        .PDFs { background: #ef5350; }
+        .WordDocuments { background: #7e57c2; }
+        .ExcelFiles { background: #26a69a; }
+        .PowerPoint { background: #ffa726; }
+        .TextFiles { background: #8d6e63; }
+        .Audio { background: #ec407a; }
+        .Video { background: #5c6bc0; }
+        .Archives { background: #ff7043; }
+        .CodeFiles { background: #26c6da; }
+        .Executables { background: #d4e157; }
+        .Fonts { background: #78909c; }
+        .Database { background: #66bb6a; }
+        .Email { background: #ef5350; }
+        .eBook { background: #7e57c2; }
+        .Design { background: #29b6f6; }
+        .Logs { background: #8d6e63; }
+        .Shaders { background: #ab47bc; }
+        .Others { background: #9e9e9e; }
+
+        /* No uploads message */
+        .no-files {
+            text-align: center;
+            margin: 30px 0;
+            padding: 30px;
+            background: #ffe6e6;
+            color: #e53935;
+            font-size: 18px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+            animation: bounce 1s infinite alternate;
+        }
+        .no-files i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+            color: #e53935;
+        }
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        .links {
+            margin-top: 20px;
+        }
+        .links a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #1a73e8;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <h2>User: {{ user.email }}</h2>
+
+    <!-- 📊 User Statistics -->
+    <h3>📊 User Statistics</h3>
+    <div class="stats">
+        <div class="stat-card">
+            <i class="fas fa-file"></i>
+            <h3>{{ total_files }}</h3>
+            <p>Total Files</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-layer-group"></i>
+            <h3>{{ total_categories }}</h3>
+            <p>Categories</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-folder-open"></i>
+            <h3>{{ most_files_category or '-' }}</h3>
+            <p>Most Files in Category</p>
+        </div>
+    </div>
+
+    <!-- Uploaded Files -->
+    <h3>Uploaded Files</h3>
+    {% if categories %}
+        {% for cat, files in categories.items() %}
+            <div class="folder {{ cat.replace(' ', '') }}">
+                <h4>
+                    <i class="
+                        {% if cat=='Certificate' %}fas fa-award
+                        {% elif cat=='Academic' %}fas fa-graduation-cap
+                        {% elif cat=='Work' %}fas fa-briefcase
+                        {% elif cat=='Business' %}fas fa-receipt
+                        {% elif cat=='Personal' %}fas fa-id-card
+                        {% elif cat=='Images' %}fas fa-image
+                        {% elif cat=='PDFs' %}fas fa-file-pdf
+                        {% elif cat=='Word Documents' or cat=='WordDocuments' %}fas fa-file-word
+                        {% elif cat=='Excel Files' or cat=='ExcelFiles' %}fas fa-file-excel
+                        {% elif cat=='PowerPoint' %}fas fa-file-powerpoint
+                        {% elif cat=='Text Files' or cat=='TextFiles' %}fas fa-file-lines
+                        {% elif cat=='Audio' %}fas fa-music
+                        {% elif cat=='Video' %}fas fa-film
+                        {% elif cat=='Archives' %}fas fa-box
+                        {% elif cat=='Code Files' or cat=='CodeFiles' %}fas fa-code
+                        {% elif cat=='Executables' %}fas fa-cogs
+                        {% elif cat=='Fonts' %}fas fa-font
+                        {% elif cat=='Database' %}fas fa-database
+                        {% elif cat=='Email' %}fas fa-envelope
+                        {% elif cat=='eBook' %}fas fa-book
+                        {% elif cat=='Design' %}fas fa-pencil-ruler
+                        {% elif cat=='Logs' %}fas fa-file-alt
+                        {% elif cat=='Shaders' %}fas fa-shapes
+                        {% else %}fas fa-folder
+                        {% endif %}"></i>
+                    {{ cat }} ({{ files|length }})
+                </h4>
+                <ul>
+                    {% for f in files %}
+                        <li>{{ f.filename }} - 
+                            <a href="/download_file/{{ f.id }}">Download</a> | 
+                            <a href="/delete_file/{{ f.id }}">Delete</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <a class="download-zip" href="/download_category/{{ user.id }}/{{ cat }}">Download ZIP</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-files">
+            <i class="fas fa-folder-open"></i>
+            No files uploaded yet! <br>📂 Start uploading to see them here.
+        </div>
+    {% endif %}
+
+    <div class="links">
+        <a href="/admin_panel">← Return to Admin Panel</a> |
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+</body>
+</html>

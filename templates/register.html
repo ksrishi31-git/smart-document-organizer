@@ -1,7 +1,24 @@
-<h2>Register</h2>
-<form method="POST">
-  <input type="email" name="email" placeholder="Email" required><br>
-  <input type="password" name="password" placeholder="Password" required><br>
-  <button>Register</button>
-</form>
-<a href="/">Login</a>
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>Register</title>
+</head>
+<body>
+
+<div class="card">
+  <h2>Register</h2>
+  <form method="POST">
+    <label>Email:</label>
+    <input type="email" name="email" required>
+    <label>Password:</label>
+    <input type="password" name="password" required>
+    <button>Register</button>
+    <p style="text-align:center;margin-top:10px;">
+      <a href="/">Back to Login</a>
+    </p>
+  </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+<h2>Previous Activities</h2>
+{% for log in logs %}
+<div class="card">
+{{ log.user }} — {{ log.action }} — {{ log.date }}
+</div>
+{% endfor %}
+<a href="/dashboard">⬅ Back</a>
+</div>
+</body>
+</html>

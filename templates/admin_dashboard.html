@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>Admin Dashboard</title>
+</head>
+<body>
+
+<div class="sidebar">
+  <a href="/admin_dashboard">Dashboard</a>
+  <a href="/admin">Admin Panel</a>
+  <a href="/logout">Logout</a>
+</div>
+
+<div class="container">
+  <h2>My Dashboard (Admin)</h2>
+
+  <!-- Upload Form -->
+  <form method="post" action="/upload" enctype="multipart/form-data">
+    <label>Choose Files to Upload:</label><br>
+    <input type="file" name="files" multiple required><br>
+    <button>Upload</button>
+  </form>
+
+  <h3>Previous Uploads</h3>
+  {% for cat, files in categories.items() %}
+    <div class="folder">
+      <h3>📁 {{ cat }} ({{ files|length }})</h3>
+      <ul>
+        {% for f in files %}
+          <li>{{ f.filename }} - <a href="/download_file/{{ f.id }}">Download</a></li>
+        {% endfor %}
+      </ul>
+      <a href="/download_category/{{ cat }}">Download ZIP</a>
+    </div>
+  {% endfor %}
+
+  <br>
+  <a href="/admin">← Return to Admin Panel</a>
+</div>
+
+</body>
+</html>
