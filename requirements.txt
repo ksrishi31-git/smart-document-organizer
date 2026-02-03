@@ -1,7 +1,13 @@
 Flask
 Flask-SQLAlchemy
-Flask-Login
 Werkzeug
+
+openai==0.28.1
+
+PyPDF2
+python-docx
+
 pytesseract
 Pillow
-openai
+
+pdf2image
