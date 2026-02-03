@@ -463,11 +463,11 @@ def logout():
 
 # ------------------ RUN ------------------
 if __name__ == "__main__":
-    # reset_all_data_once()   ❌ commented, safe
-
     with app.app_context():
         db.create_all()
         create_admins()
 
     os.makedirs("uploads", exist_ok=True)
-    app.run(debug=True)
+
+    app.run(host="0.0.0.0", port=10000)
+

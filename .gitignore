@@ -1,0 +1,13 @@
+# Ignore database
+instance/
+*.db
+
+# Ignore uploads
+uploads/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore env
+.env
