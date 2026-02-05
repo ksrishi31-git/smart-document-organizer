@@ -223,9 +223,7 @@ Content:
     except:
         return detect_extension_category(filename)
 # ------------------ AUTO CREATE ADMINS ------------------
-@app.route("/health")
-def health():
-    return "OK", 200
+
 
 def create_admins():
     admins = [
@@ -465,6 +463,9 @@ def download_category(user_id, category):
 def logout():
     session.clear()
     return redirect("/")
+@app.route("/health")
+def health():
+    return "OK", 200
 
 # ------------------ RUN ------------------
 if __name__ == "__main__":
