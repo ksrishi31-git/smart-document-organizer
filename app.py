@@ -88,7 +88,8 @@ def detect_extension_category(filename):
     return "Others"
 
 # ------------------ OPENAI ------------------
-openai.api_key = "YOUR_OPENAI_API_KEY"
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 # ------------------ STRONG DOCUMENT INTENT ------------------
 DOCUMENT_TYPES = {
